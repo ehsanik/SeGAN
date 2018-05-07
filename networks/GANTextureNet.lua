@@ -117,6 +117,52 @@ fGx = function(x)
     return errG, gradParametersG
 end
 
+
+-- Adapted from https://github.com/phillipi/pix2pix
+local function defineG(input_nc, output_nc, ngf)
+    local netG = nil
+    if     opt.which_model_netG == "encoder_decoder" then netG = defineG_encoder_decoder(input_nc, output_nc, ngf)
+    elseif opt.which_model_netG == "unet" then netG = defineG_unet(input_nc, output_nc, ngf)
+    elseif opt.which_model_netG == "unet_128" then netG = defineG_unet_128(input_nc, output_nc, ngf)
+    else error("unsupported netG model")
+    end
+    netG:apply(weights_init)
+    return netG 
+end
+
+-- Adapted from https://github.com/phillipi/pix2pix
+local function defineD(input_nc, output_nc, ndf)
+    local netD = nil
+    if opt.condition_GAN==1 then
+      input_nc_tmp = input_nc
+    else
+      input_nc_tmp = 0 -- only penalizes structure in output channels
+    end
+    
+    if opt.which_model_netD == "basic" then 
+      netD = defineD_basic(input_nc_tmp, output_nc, ndf)
+    elseif opt.which_model_netD == "n_layers" then 
+      netD = defineD_n_layers(input_nc_tmp, output_nc, ndf, opt.n_layers_D)
+    else 
+      error("unsupported netD model")
+    end
+    netD:apply(weights_init)
+    
+    return netD
+end
+
+
+function weights_init(m)
+  local name = torch.type(m)
+  if name:find('Convolution') then
+    m.weight:normal(0.0, 0.02)
+    m.bias:fill(0)
+  elseif name:find('BatchNormalization') then
+    if m.weight then m.weight:normal(1.0, 0.02) end
+    if m.bias then m.bias:fill(0) end
+  end
+end
+
 -- Contructing the networks
 function constructorTextureNet()
   

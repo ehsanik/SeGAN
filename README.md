@@ -83,7 +83,7 @@ The dataset can be downloaded from [here](https://homes.cs.washington.edu/~kiana
 To train your own model:
 
 ```
-th train.lua -baseLR 1e-3 -end2end -istrain "train"
+th main.lua -baseLR 1e-3 -end2end -istrain "train"
 ```
 
 See `data_settings.lua` for additional commandline options.
@@ -132,13 +132,13 @@ To test using the pretrained model and reproduce the results in the paper:
 </table>
 
 ```
-th train.lua -weights_segmentation "weights/segment" -end2end -weights_texture "weights/texture" -istrain "test" -predictedSV
+th main.lua -weights_segmentation "weights/segment" -end2end -weights_texture "weights/texture" -istrain "test" -predictedSV
 ```
 
 For testing using the groundtruth visible mask as input instead of the predicted mask:
 
 ```
-th train.lua -weights_segmentation "weights/segment_gt_sv" -end2end -weights_texture "weights/texture_gt_sv" -istrain "test"
+th main.lua -weights_segmentation "weights/segment_gt_sv" -end2end -weights_texture "weights/texture_gt_sv" -istrain "test"
 ```
 
 

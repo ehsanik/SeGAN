@@ -26,6 +26,7 @@ paths.dofile('util/TagMapDict.lua')
 paths.dofile('SettingsParser.lua');
 IOUtilFunctions = paths.dofile('util/IOUtilFunctions.lua')
 paths.dofile('util/EvalMetricUtil.lua')
+paths.dofile('util/BatchGeneration.lua')
 
 
 
@@ -65,75 +66,6 @@ local parametersG, gradParametersG
 local output_end2end, gradient_end2end
 local input_critical, output_critical, resized_amodal_critical, resized_modal_critical, crop_box, original_images
 ----------------------------------------------------------------------------
-
--- Adapted from https://github.com/phillipi/pix2pix
-local function defineG(input_nc, output_nc, ngf)
-    local netG = nil
-    if     opt.which_model_netG == "encoder_decoder" then netG = defineG_encoder_decoder(input_nc, output_nc, ngf)
-    elseif opt.which_model_netG == "unet" then netG = defineG_unet(input_nc, output_nc, ngf)
-    elseif opt.which_model_netG == "unet_128" then netG = defineG_unet_128(input_nc, output_nc, ngf)
-    else error("unsupported netG model")
-    end
-    netG:apply(weights_init)
-    return netG 
-end
-
--- Adapted from https://github.com/phillipi/pix2pix
-local function defineD(input_nc, output_nc, ndf)
-    local netD = nil
-    if opt.condition_GAN==1 then
-      input_nc_tmp = input_nc
-    else
-      input_nc_tmp = 0 -- only penalizes structure in output channels
-    end
-    
-    if opt.which_model_netD == "basic" then 
-      netD = defineD_basic(input_nc_tmp, output_nc, ndf)
-    elseif opt.which_model_netD == "n_layers" then 
-      netD = defineD_n_layers(input_nc_tmp, output_nc, ndf, opt.n_layers_D)
-    else 
-      error("unsupported netD model")
-    end
-    netD:apply(weights_init)
-    
-    return netD
-end
-
-
--- Read a batch from dataset
-local function get_batch()
-  if cmd.istrain ~= 'train' then
-    config.train.save_dir = config.train.save_dir:gsub('train', 'test')
-  end
-  if cmd.cvpr then
-    images, resized_full, amodal_cvpr, modal_cvpr , crop_box, original_images, resized_amodal, resized_modal    = GetAnImageBatch(config.train)  
-    return images, resized_full, amodal_cvpr, modal_cvpr , crop_box, original_images, resized_amodal, resized_modal 
-  end 
-  local images, resized_full, resized_amodal, resized_modal, crop_box, original_images  = GetAnImageBatch(config.train)  
-  if cmd.no_masks then
-    local weights = get_mask(resized_modal, resized_amodal)
-    for ch=1,3 do
-      if cmd.old_no_masks then
-          config.red = config.blue
-      end
-      (images[{{},{ch},{},{}}])[torch.eq(weights, 2)] = config.red[ch];
-      (images[{{},{ch},{},{}}])[torch.eq(weights, 0)] = config.blue[ch]
-    end
-  end
-  return images, resized_full, resized_amodal, resized_modal, crop_box, original_images
-end
-
-----------------------------------------------------------------------------
-function weights_init(m)
-  local name = torch.type(m)
-  if name:find('Convolution') then
-    m.weight:normal(0.0, 0.02)
-    m.bias:fill(0)
-  elseif name:find('BatchNormalization') then
-    if m.weight then m.weight:normal(1.0, 0.02) end
-    if m.bias then m.bias:fill(0) end
-  end
-end
 
 
 local function createRealFake() 
