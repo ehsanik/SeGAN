@@ -20,7 +20,6 @@ require('ROI.ROI')
 require('ROI.ROIPooling')
 require('networks/SeGANCri')
 pl = require'pl.import_into'()
-debugger = require 'fb.debugger'
 util = paths.dofile('util/util.lua')
 paths.dofile('util/TagMapDict.lua')
 paths.dofile('SettingsParser.lua');
