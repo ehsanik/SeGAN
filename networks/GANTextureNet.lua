@@ -16,7 +16,6 @@ require 'math'
 require 'gnuplot'
 require 'sys'
 require 'image'
-debugger = require 'fb.debugger'
 require('ROI.ROI')
 require('ROI.ROIPooling')
 require('networks/SeGANCri')
