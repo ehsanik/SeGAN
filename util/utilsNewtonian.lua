@@ -361,7 +361,6 @@ function GetPerClassAccuracy(predictions, labels)
 
   local nonzero_cls = torch.nonzero(per_class[{{},{2}}])
   nonzero_cls = torch.squeeze(nonzero_cls[{{},{1}}])
-  --debugger.enter()
   if torch.isTensor(nonzero_cls) == false then
     nonzero_cls = torch.LongTensor(1):fill(nonzero_cls)
   end
