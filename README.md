@@ -42,12 +42,12 @@ If you find this project useful in your research, please consider citing:
 		git clone https://github.com/ehsanik/SeGAN
 		cd SeGAN
 
-2. Download the dataset from [here](https://homes.cs.washington.edu/~kianae/DYCE.tar.gz) and extract it.
+2. Download the dataset from [here](https://drive.google.com/file/d/1TfrP4Sptm6wPMdrn9MrWghfTNAMTCtlY/view?usp=sharing) and extract it.
 3. Make a link to the dataset.
 
 		ln -s /PATH/TO/DATASET dyce_data
 
-4. Download pretrained weights from [here](https://homes.cs.washington.edu/~kianae/weights_segan_cvpr18.tar.gz) and extract it.
+4. Download pretrained weights from [here](https://drive.google.com/file/d/1cGXaO8rHLOVwuVZOXw3tuDDfNxw2eGbL/view?usp=sharing) and extract it.
 5. Make a link to the weights' folder.
 
 		ln -s /PATH/TO/WEIGHTS weights
@@ -76,7 +76,7 @@ object instance in train and test scenes.
 
 <center><img src="figs/dataset.jpg" height="300px" ></center>
 
-The dataset can be downloaded from [here](https://homes.cs.washington.edu/~kianae/DYCE.tar.gz).
+The dataset can be downloaded from [here](https://drive.google.com/file/d/1TfrP4Sptm6wPMdrn9MrWghfTNAMTCtlY/view?usp=sharing).
 
 ### Train
 
